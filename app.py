@@ -19,6 +19,7 @@ from Function import *
 import tempfile, os
 import datetime
 import time
+import psycopg2
 #======python的函數庫==========
 
 app = Flask(__name__)
@@ -27,6 +28,13 @@ static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 line_bot_api = LineBotApi('tG2+BvqixjrHDIX6jhmCcW+g5LMa4fumy+Zm6PdnyFJleHpK0F1pn4KGeRV7NCvZsqU40mmi1NJsvgq5Ozq2MdZHxV6l8wT/Kp0CGkfApeUhHSFwWMRWHsOBepB/p0jTlCZrfECMhlTaO0lQ3umGlgdB04t89/1O/w1cDnyilFU=')
 # Channel Secret
 handler = WebhookHandler('4028d87a97d982c2049e4a0ad2131698')
+
+conn = psycopg2.connect(database=db395cakuikd2s,user=yoxejfdazwyghe,password=b35aaaceaf6c2c2bb47b3054e364fefec42fb8be687364e35e6b58a2260da715,host=ec2-52-202-198-60.compute-1.amazonaws.com,port=5432)
+cur = conn.cursor()
+
+cur.execute('SELECT VERSION()')
+results=cur.fetchall()
+print ("Database version : %s " % results)
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
@@ -74,3 +82,6 @@ import os
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
+conn.commit()
+cur.close()
