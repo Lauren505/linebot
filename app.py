@@ -55,40 +55,25 @@ def callback():
         abort(400)
     return 'OK'
 
+# 判斷有沒有註冊過
+def user_verification():
+    cur.execute("SELECT userid FROM profile")
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+        print(type(row))
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print(event)
     msg = event.message.text
-    if '最新合作廠商' in msg:
-        message = imagemap_message()
-        line_bot_api.reply_message(event.reply_token, message)
-    elif '最新活動訊息' in msg:
-        message = buttons_message()
-        line_bot_api.reply_message(event.reply_token, message)
-    elif '註冊會員' in msg:
-        message = Confirm_Template()
-        line_bot_api.reply_message(event.reply_token, message)
-    elif '旋轉木馬' in msg:
-        message = Carousel_Template()
-        line_bot_api.reply_message(event.reply_token, message)
-    elif '圖片畫廊' in msg:
-        message = test()
-        line_bot_api.reply_message(event.reply_token, message)
-    elif '功能列表' in msg:
-        message = function_list()
-        line_bot_api.reply_message(event.reply_token, message)
-    else:
-        message = TextSendMessage(text=msg)
-        cur.execute("INSERT INTO profile(school, studentid) VALUES (%s, %s)", ("大葉", "B00"))
-        cur.execute("SELECT * FROM profile")
-        rows = cur.fetchall()
-        print('fetch from profile...')
-        for row in rows:
-            print(row)
-        line_bot_api.reply_message(event.reply_token, message)
-        conn.commit()
+    user_verification()
+    message = TextSendMessage(text=msg)
+
+    # cur.execute("INSERT INTO profile(school, studentid) VALUES (%s, %s)", ("大葉", "B00"))
+    # conn.commit()
+    line_bot_api.reply_message(event.reply_token, message)
 
 import os
 if __name__ == "__main__":
