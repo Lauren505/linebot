@@ -78,6 +78,7 @@ def handle_message(event):
     else:
         message = TextSendMessage(text=msg)
         line_bot_api.reply_message(event.reply_token, message)
+        cur.execute("INSERT INTO profile(school) VALUES ('大葉');")
 
 import os
 if __name__ == "__main__":
