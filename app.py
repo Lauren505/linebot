@@ -29,7 +29,11 @@ line_bot_api = LineBotApi('tG2+BvqixjrHDIX6jhmCcW+g5LMa4fumy+Zm6PdnyFJleHpK0F1pn
 # Channel Secret
 handler = WebhookHandler('4028d87a97d982c2049e4a0ad2131698')
 
-conn = psycopg2.connect(database='db395cakuikd2s',user='yoxejfdazwyghe',password='b35aaaceaf6c2c2bb47b3054e364fefec42fb8be687364e35e6b58a2260da715',host='ec2-52-202-198-60.compute-1.amazonaws.com',port='5432')
+conn = psycopg2.connect(database='db395cakuikd2s',
+                        user='yoxejfdazwyghe',
+                        password='b35aaaceaf6c2c2bb47b3054e364fefec42fb8be687364e35e6b58a2260da715',
+                        host='ec2-52-202-198-60.compute-1.amazonaws.com',
+                        port='5432')
 cur = conn.cursor()
 
 cur.execute('SELECT VERSION()')
@@ -77,7 +81,12 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, message)
     else:
         message = TextSendMessage(text=msg)
-        cur.execute("INSERT INTO profile(school) VALUES ('大葉');")
+        cur.execute("SELECT * FROM profile")
+        cur.execute("INSERT INTO profile(school, studentid) VALUES (%s, %s)", ("大葉", "B00"))
+        rows = cur.fetchall()
+        print('fetch from profile...')
+        for row in rows:
+            print(row)
         line_bot_api.reply_message(event.reply_token, message)
 
 import os
