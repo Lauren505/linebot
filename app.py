@@ -81,13 +81,14 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, message)
     else:
         message = TextSendMessage(text=msg)
-        # cur.execute("INSERT INTO profile(school, studentid) VALUES (%s, %s)", ("大葉", "B00"))
+        cur.execute("INSERT INTO profile(school, studentid) VALUES (%s, %s)", ("大葉", "B00"))
         cur.execute("SELECT * FROM profile")
         rows = cur.fetchall()
         print('fetch from profile...')
         for row in rows:
             print(row)
         line_bot_api.reply_message(event.reply_token, message)
+        conn.commit()
 
 import os
 if __name__ == "__main__":
