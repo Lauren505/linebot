@@ -55,20 +55,24 @@ def callback():
         abort(400)
     return 'OK'
 
-# 判斷有沒有註冊過
-def user_verification():
+# 判斷是否為新用戶
+def new_user(user_id):
     cur.execute("SELECT userid FROM profile")
     rows = cur.fetchall()
     for row in rows:
-        print(row)
-        print(type(row))
+        if user_id==row[0]:
+            return 0
+    return 1
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print(event)
     msg = event.message.text
-    user_verification()
+    user_id = event.source.user_id
+    print(user_id)
+    if new_user(user_id):
+        print('is new user')
     message = TextSendMessage(text=msg)
 
     # cur.execute("INSERT INTO profile(school, studentid) VALUES (%s, %s)", ("大葉", "B00"))
