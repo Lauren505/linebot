@@ -64,15 +64,21 @@ def new_user(user_id):
             return 0
     return 1
 
+def user_registration(user_id):
+    cur.execute("INSERT INTO profile(userid, status) VALUES (%s, %s)", (user_id, "0"))
+    conn.commit()
+
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print(event)
     msg = event.message.text
     user_id = event.source.user_id
-    print(user_id)
     if new_user(user_id):
-        print('is new user')
+        print(user_id, 'is a new user')
+        user_registration(user_id)
+    else:
+        print(user_id, 'has already registered')
     message = TextSendMessage(text=msg)
 
     # cur.execute("INSERT INTO profile(school, studentid) VALUES (%s, %s)", ("大葉", "B00"))
