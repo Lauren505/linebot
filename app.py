@@ -70,6 +70,15 @@ def handle_message(event):
         db.getQuestionListBySubject('here')
     if msg=='get question by asker':
         db.getQuestionListByAsker('here')
+    if msg=='submit answer':
+        db.setAnswer('1','2','3','4')
+        db.setRatings('1','5')
+    if msg=='get answer':
+        db.getAnswerList()
+    if msg=='get answer by question':
+        db.getAnswerListByQuestion('3')
+    if msg=='get answer by solver':
+        db.getAnswerListBySolver('2')
     message = TextSendMessage(text=msg)
     line_bot_api.reply_message(event.reply_token, message)
 
