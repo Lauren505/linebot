@@ -13,6 +13,7 @@ from linebot.models import *
 from message import *
 from new import *
 from Function import *
+from postgresql import *
 #======這裡是呼叫的檔案內容=====
 
 #======python的函數庫==========
@@ -29,16 +30,8 @@ line_bot_api = LineBotApi('tG2+BvqixjrHDIX6jhmCcW+g5LMa4fumy+Zm6PdnyFJleHpK0F1pn
 # Channel Secret
 handler = WebhookHandler('4028d87a97d982c2049e4a0ad2131698')
 
-conn = psycopg2.connect(database='db395cakuikd2s',
-                        user='yoxejfdazwyghe',
-                        password='b35aaaceaf6c2c2bb47b3054e364fefec42fb8be687364e35e6b58a2260da715',
-                        host='ec2-52-202-198-60.compute-1.amazonaws.com',
-                        port='5432')
-cur = conn.cursor()
-
-cur.execute('SELECT VERSION()')
-results=cur.fetchall()
-print ("Database version : %s " % results)
+# Test database class
+db = postgre()
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
@@ -55,18 +48,6 @@ def callback():
         abort(400)
     return 'OK'
 
-# 判斷是否為新用戶
-def new_user(user_id):
-    cur.execute("SELECT userid FROM profile")
-    rows = cur.fetchall()
-    for row in rows:
-        if user_id==row[0]:
-            return 0
-    return 1
-
-def user_registration(user_id):
-    cur.execute("INSERT INTO profile(userid, status) VALUES (%s, %s)", (user_id, "0"))
-    conn.commit()
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
@@ -74,15 +55,13 @@ def handle_message(event):
     print(event)
     msg = event.message.text
     user_id = event.source.user_id
-    if new_user(user_id):
+    if db.new_user(user_id):
         print(user_id, 'is a new user')
-        user_registration(user_id)
+        db.user_registration(user_id, "0", "university", "department", "studentid", 100, "name", "student_id_card", "line_id")
     else:
         print(user_id, 'has already registered')
+        
     message = TextSendMessage(text=msg)
-
-    # cur.execute("INSERT INTO profile(school, studentid) VALUES (%s, %s)", ("大葉", "B00"))
-    # conn.commit()
     line_bot_api.reply_message(event.reply_token, message)
 
 import os
@@ -90,5 +69,3 @@ if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
 
-conn.commit()
-cur.close()
