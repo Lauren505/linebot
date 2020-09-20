@@ -60,8 +60,16 @@ def handle_message(event):
         db.user_registration("userid", "0", "university", "department", "studentid", 100, "name", "student_id_card", line_id)
     else:
         print(line_id, 'has already registered')
-        db.setUserStatus('userid', '5')
-        
+    if msg=='submit question':
+        db.setQuestion('1','0','3','4','5','0','7','8')
+        db.setQuestion('1','9','3','4','5','here','7','8')
+        db.setQuestion('1','here','3','4','5','9','7','8')
+    if msg=='get question':
+        db.getQuestionList()
+    if msg=='get question by subject':
+        db.getQuestionListBySubject('here')
+    if msg=='get question by asker':
+        db.getQuestionListByAsker('here')
     message = TextSendMessage(text=msg)
     line_bot_api.reply_message(event.reply_token, message)
 
