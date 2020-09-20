@@ -51,7 +51,7 @@ class postgre:
     
     # Fill in user information
     def user_registration(self, userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, lineid):
-        self.cur.execute("INSERT INTO profile(userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, line_id) VALUES (%s, %s, %s, %s, %s, %d, %s, %s, %s)", 
+        self.cur.execute("INSERT INTO profile(userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, line_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", 
                         (userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, lineid))
         self.conn.commit()
     
