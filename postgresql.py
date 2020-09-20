@@ -99,13 +99,13 @@ class postgre:
         return question_list
  
     '''
-    answers_id, solver_id, question_id, answer, ratings
+    answer_id, solver_id, question_id, answer, ratings
     '''
 
     # Set answers(undone: id)
-    def setAnswer(self, answers_id, solver_id, question_id, answer):
-        self.cur.execute("INSERT INTO answers(answers_id, solver_id, question_id, answer) VALUES (%s, %s, %s, %s)",
-                        (answers_id, solver_id, question_id, answer))
+    def setAnswer(self, answer_id, solver_id, question_id, answer):
+        self.cur.execute("INSERT INTO answers(answer_id, solver_id, question_id, answer) VALUES (%s, %s, %s, %s)",
+                        (answer_id, solver_id, question_id, answer))
         self.conn.commit()
 
     # Set ratings
