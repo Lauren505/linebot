@@ -41,20 +41,25 @@ class postgre:
         print ("Database version : %s " % results)
 
     # Identify a new user
-    def new_user(self, userid):
-        self.cur.execute("SELECT userid FROM profile")
+    def new_user(self, lineid):
+        self.cur.execute("SELECT line_id FROM profile")
         rows = self.cur.fetchall()
         for row in rows:
-            if userid==row[0]:
+            if lineid==row[0]:
                 return 0
         return 1
     
     # Fill in user information
-    def user_registration(self, userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, line_id):
+    def user_registration(self, userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, lineid):
         self.cur.execute("INSERT INTO profile(userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, line_id) VALUES (%s, %s, %s, %s, %s, %d, %s, %s, %s)", 
-                        (userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, line_id))
+                        (userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, lineid))
         self.conn.commit()
     
+    def alterUserStatus(self, userid, status):
+        status = str(status)
+        self.cur.execute("INSERT INTO profile(status) VALUE (%s)", status)
+        self.conn.commit()
+
     def setQuestions(self):
         pass
 
