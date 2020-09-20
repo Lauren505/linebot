@@ -55,9 +55,13 @@ class postgre:
                         (userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, lineid))
         self.conn.commit()
     
-    def alterUserStatus(self, userid, status):
+    def setUserStatus(self, userid, status):
         status = str(status)
-        self.cur.execute("INSERT INTO profile(status) VALUE (%s)", status)
+        self.cur.execute("""
+                        UPDATE profile 
+                        SET status = %s
+                        WHERE userid = %s
+                        """, (status, userid))
         self.conn.commit()
 
     def setQuestions(self):
