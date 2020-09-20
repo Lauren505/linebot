@@ -85,7 +85,7 @@ class postgre:
 
     def getQuestionListBySubject(self, subject):
         question_list = []
-        self.cur.execute("SELECT * FROM questions WHERE subject=%s", subject)
+        self.cur.execute("SELECT * FROM questions WHERE subject=%s", (subject, ))
         rows = self.cur.fetchall()
         for row in rows:
             header = [row[5], row[6], row[7]]
@@ -96,7 +96,7 @@ class postgre:
 
     def getQuestionListByAsker(self, askerid):
         question_list = []
-        self.cur.execute("SELECT * FROM questions WHERE asker_id=%s", askerid)
+        self.cur.execute("SELECT * FROM questions WHERE asker_id=%s", (askerid, ))
         rows = self.cur.fetchall()
         for row in rows:
             header = [row[5], row[6], row[7]]
