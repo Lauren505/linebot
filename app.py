@@ -59,7 +59,8 @@ def handle_message(event):
         print(line_id, 'is a new user')
         db.user_registration("userid", "0", "university", "department", "studentid", 100, "name", "student_id_card", line_id)
     else:
-        print(user_id, 'has already registered')
+        print(line_id, 'has already registered')
+        db.setUserStatus('userid', '5')
         
     message = TextSendMessage(text=msg)
     line_bot_api.reply_message(event.reply_token, message)
