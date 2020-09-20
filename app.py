@@ -54,10 +54,10 @@ def callback():
 def handle_message(event):
     print(event)
     msg = event.message.text
-    user_id = event.source.user_id
-    if db.new_user(user_id):
-        print(user_id, 'is a new user')
-        db.user_registration(user_id, "0", "university", "department", "studentid", 100, "name", "student_id_card", "line_id")
+    line_id = event.source.user_id
+    if db.new_user(line_id):
+        print(line_id, 'is a new user')
+        db.user_registration("userid", "0", "university", "department", "studentid", 100, "name", "student_id_card", line_id)
     else:
         print(user_id, 'has already registered')
         
