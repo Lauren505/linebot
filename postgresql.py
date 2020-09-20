@@ -35,16 +35,21 @@ class postgre:
         self.cur.execute("INSERT INTO profile(userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, line_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", 
                         (userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, lineid))
         self.conn.commit()
-    
+
     # Set user status
     def setUserStatus(self, userid, status):
-        status = str(status)
         self.cur.execute("""
                         UPDATE profile 
                         SET status = %s
                         WHERE userid = %s
                         """, (status, userid))
         self.conn.commit()
+
+    # Get user status
+    def getUserStatus(self, userid):
+        self.cur.execute("SELECT status FROM profile WHERE userid=%s", (userid, ))
+        status = self.cur.fetchone()
+        return status
 
     '''
     question_list = [
