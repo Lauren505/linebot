@@ -1,23 +1,4 @@
-'''from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
-from linebot.models import *'''
-
 import psycopg2
-
-conn = psycopg2.connect(database='db395cakuikd2s',
-                        user='yoxejfdazwyghe',
-                        password='b35aaaceaf6c2c2bb47b3054e364fefec42fb8be687364e35e6b58a2260da715',
-                        host='ec2-52-202-198-60.compute-1.amazonaws.com',
-                        port='5432')
-cur = conn.cursor()
-
-cur.execute('SELECT VERSION()')
-results=cur.fetchall()
-print ("Database version : %s " % results)
 
 class postgre:
     def __init__(self):
@@ -49,7 +30,7 @@ class postgre:
                 return 0
         return 1
     
-    # Fill in user information
+    # Fill in user information(undone)
     def user_registration(self, userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, lineid):
         self.cur.execute("INSERT INTO profile(userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, line_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", 
                         (userid, status, university, department, studentid, year_of_enrollment, name, student_id_card, lineid))
@@ -65,7 +46,19 @@ class postgre:
                         """, (status, userid))
         self.conn.commit()
 
-    # Set questions
+    '''
+    question_list = [
+            # |題號|            header                |           圖片url                 |                  body中的文字
+            [1005, ['交換電路與邏輯設計', '課本', '7.1'], 'https://i.imgur.com/8Mjhu0Y.png',
+                ['第一段我有點不懂', '第二段我也不太懂', '第三段我也不會，我是不是太笨了QQ？']],
+            [1006, ['計算機概論', '作業',  '1'],
+                'https://i.imgur.com/FwVstGx.png', ['這次作業好難喔', '我都不會寫']],
+            [1007, ['微積分 ', '考古題', '108.1'],
+                'https://i.imgur.com/x3Sftiv.png', ['吉鈞救救我']]
+    ]
+    '''
+
+    # Set questions(undone)
     def setQuestion(self, question_id, asker_id, question_image, question_text, status, subject, source, number):
         self.cur.execute("INSERT INTO questions(question_id, asker_id, question_image, question_text, status, subject, source, number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                         (question_id, asker_id, question_image, question_text, status, subject, source, number))
@@ -104,14 +97,50 @@ class postgre:
             question_list.append([row[0], header, row[2], body])
         print(question_list)
         return question_list
-
+ 
     '''
-    question_list = [
-            # |題號|            header                |           圖片url                 |                  body中的文字
-            [1005, ['交換電路與邏輯設計', '課本', '7.1'], 'https://i.imgur.com/8Mjhu0Y.png',
-                ['第一段我有點不懂', '第二段我也不太懂', '第三段我也不會，我是不是太笨了QQ？']],
-            [1006, ['計算機概論', '作業',  '1'],
-                'https://i.imgur.com/FwVstGx.png', ['這次作業好難喔', '我都不會寫']],
-            [1007, ['微積分 ', '考古題', '108.1'],
-                'https://i.imgur.com/x3Sftiv.png', ['吉鈞救救我']]
-        ]'''
+    answers_id, solver_id, question_id, answer, ratings
+    '''
+
+    # Set answers(undone: id)
+    def setAnswer(self, answers_id, solver_id, question_id, answer):
+        self.cur.execute("INSERT INTO answers(answers_id, solver_id, question_id, answer) VALUES (%s, %s, %s, %s)",
+                        (answers_id, solver_id, question_id, answer))
+        self.conn.commit()
+
+    # Set ratings
+    def setRatings(self, answer_id, ratings):
+        self.cur.execute("""
+                         UPDATE answers
+                         SET ratings = %s
+                         WHERE answer_id = %s
+                         """, (ratings, answer_id))
+        self.conn.commit()
+
+    # Functions for data retrieval...
+    def getAnswerList(self):
+        answer_list = []
+        self.cur.execute("SELECT * FROM answers")
+        rows = self.cur.fetchall()
+        for row in rows:
+            answer_list.append([row])
+        print(answer_list)
+        return answer_list
+
+    def getAnswerListByQuestion(self, question_id):
+        answer_list = []
+        self.cur.execute("SELECT answer FROM answers WHERE question_id=%s", (question_id, ))
+        rows = self.cur.fetchall()
+        for row in rows:
+            answer_list.append([row])
+        print(answer_list)
+        return answer_list
+
+    def getAnswerListBySolver(self, solver_id):
+        answer_list = []
+        self.cur.execute("SELECT answer FROM answers WHERE solver_id=%s", (solver_id, ))
+        rows = self.cur.fetchall()
+        for row in rows:
+            answer_list.append([row])
+        print(answer_list)
+        return answer_list
